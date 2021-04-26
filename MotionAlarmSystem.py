@@ -12,4 +12,5 @@ MIXER_BUFF = 1024
 class Note(pygame.mixer.sound):
     def __init__(self, frequency, volume):
         self.freqeuncy = frequency
+        pygame.mixer.Sound.__init__(self, buffer = self.build.samples())
 
