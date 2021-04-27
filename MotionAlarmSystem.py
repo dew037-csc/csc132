@@ -3,6 +3,10 @@ import RPi.GPIO as GPIO
 from time import sleep
 import pygame
 from array import array
+from gpiozero import MotionSensor
+from signal import pause
+from picamera import PiCamera
+
 
 MIXER_FREQ = 44100
 MIXER_SIZE = -16
@@ -25,6 +29,40 @@ class Note(pygame.mixer.sound):
             else:
                 samples[t] = -amplitude
         return(samples)
+
+
+
+############################################################################################
+# Main Program
+################################################################################################
+# set up camera module
+def camera():
+    camera = PiCamera()
+    camera.resolution = (2592, 1944)
+    print("Camera ready")
+    sleep(0.1)
+    camera.capture('/home/pi/Desktop/image.jpg')
+                    
+# set up motion sensor
+motion_sensor = MotionSensor(4, threshold = 0.2)
+def motion():
+    print("Motion Detected")
+    camera()
+
+def no_motion():
+    print("No Motion Detected")
+
+print("Preparing Sensor...")
+motion_sensor.wait_for_no_motion()
+print("Sensor is ready")
+
+
+motion_sensor.when_motion = motion
+motion_sensor.when_no_motion = no_motion
+
+pause()
+
+
                     
                 
 
