@@ -65,21 +65,24 @@ def sendEmail():
     msg["Subject"] = subject
     msg["From"] = me
     msg["To"] = toaddr
-    msg.preamble = "text"
+    body = "The alarm system as detected suspicious activity."
+    msg.attach(MIMEText(body, "plain"))
+    
+    filename = "images.jpg"
+    attachment = open("/home/pi/Desktop/images.jpg", "rb")
 
     part = MIMEBase("application", "octet-stream")
-    part.set_payload(open("image.jpg", "rb").read())
+    part.set_payload((attachment).read())
     encoders.encode_base64(part)
-    part.add_header("Content-Disposition", "attachment; filename = 'image.jpg'")
+    part.add_header("Content-Disposition", "attachment; filename = %s"% filename)
     msg.attach(part)
 
     
     s = smtplib.SMTP("smtp.gmail.com", 587)
-    s.ehlo()
     s.starttls()
-    s.ehlo()
     s.login(user = "picameraspam@gmail.com", password = "blong9191")
-    s.sendmail(me, toaddr, msg.as_string())
+    text = msg.as_string()
+    s.sendmail(me, toaddr, text)
     s.quit()
         
                
@@ -91,8 +94,7 @@ def camera():
         camera.framerate = 15
         print("Camera ready")
         sleep(0.1)
-        for i in range(5):
-            camera.capture('/home/pi/Desktop/image.jpg')
+        camera.capture('/home/pi/Desktop/images.jpg')
         # picameraspam@gmail.com
         # password: blong9191
         #sendEmail()
@@ -105,7 +107,7 @@ def motion():
     print("Motion Detected")
     camera()
     makeSound()
-    sendEmail()
+    #sendEmail()
     
 
 def no_motion():
@@ -117,6 +119,7 @@ print("Sensor is ready")
 
 while True:
     motion_sensor.when_motion = motion
+    sendEmail()
     motion_sensor.when_no_motion = no_motion
 
     
