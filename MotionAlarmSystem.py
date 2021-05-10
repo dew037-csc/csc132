@@ -19,6 +19,7 @@ MIXER_SIZE = -16
 MIXER_CHANS = 1
 MIXER_BUFF = 1024
 
+# class note to create alarm sound
 class Note(pygame.mixer.Sound):
     def __init__(self, frequency, volume):
         self.frequency = frequency
@@ -67,7 +68,7 @@ def sendEmail():
     msg["To"] = toaddr
     body = "The alarm system as detected suspicious activity."
     msg.attach(MIMEText(body, "plain"))
-    
+    # filename
     filename = "images.jpg"
     attachment = open("/home/pi/Desktop/images.jpg", "rb")
 
@@ -97,7 +98,6 @@ def camera():
         camera.capture('/home/pi/Desktop/images.jpg')
         # picameraspam@gmail.com
         # password: blong9191
-        #sendEmail()
     finally:
         camera.close()
                     
@@ -121,6 +121,7 @@ while True:
     motion_sensor.when_motion = motion
     sendEmail()
     motion_sensor.when_no_motion = no_motion
+    sleep(20)
 
     
 
