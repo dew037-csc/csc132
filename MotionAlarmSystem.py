@@ -121,7 +121,8 @@ while True:
     motion_sensor.when_motion = motion
     sendEmail()
     motion_sensor.when_no_motion = no_motion
-    sleep(20)
+    
+    
 
     
 
